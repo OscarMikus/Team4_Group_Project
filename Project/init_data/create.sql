@@ -31,6 +31,7 @@ CREATE TABLE Trail_Messages(
 CREATE TABLE User_Trails(
     user_id INT,
     trail_id INT,
+    
     CONSTRAINT fk_user
     FOREIGN KEY(user_id)
     REFERENCES Users(user_id),
@@ -56,9 +57,14 @@ CREATE TABLE Friends(
 
 CREATE TABLE Messages(
     friendship_id INT,
+    user_id_sent_by INT,
     message VARCHAR(100),
 
     CONSTRAINT fk_friendship
     FOREIGN KEY(friendship_id)
-    REFERENCES Friends(friendship_id)
-)
+    REFERENCES Friends(friendship_id),
+
+    CONSTRAINT fk_sender
+    FOREIGN KEY(user_id)
+    REFERENCES Users(user_id)
+);
