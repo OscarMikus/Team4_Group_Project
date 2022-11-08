@@ -65,6 +65,6 @@ CREATE TABLE Messages(
     REFERENCES Friends(friendship_id),
 
     CONSTRAINT fk_sender
-    FOREIGN KEY(user_id)
+    FOREIGN KEY(user_id_sent_by)
     REFERENCES Users(user_id)
 );
