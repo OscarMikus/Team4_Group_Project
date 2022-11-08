@@ -1,0 +1,35 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+
+<main>
+  <div class="container">
+    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+    <head>
+        <h1>Login</h1>
+    </head>
+    <body>
+        <div>
+            <form action="/login" method="post">
+                <div class="form-group row mb-3">
+                    <label for="inputUser" class="col-sm-1 col-form-label">Username</label>
+                    <div class="col">
+                      <input class="form-control" id="inputUser" name="username" placeholder="Username">
+                    </div>
+                  </div>
+                <div class="form-group row mb-3">
+                    <label for="inputPassword" class="col-sm-1 col-form-label">Password</label>
+                    <div class="col">
+                      <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+                    </div>
+                  </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                  </div>
+            </form>
+        </div>
+    </body>
+  </div>
+</main>
+
+
+<%- include ('../partials/footer') %>

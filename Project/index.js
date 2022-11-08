@@ -47,12 +47,12 @@ app.use(
 
 app.get('/', (req,res) => //Homepage
 {
-
+  res.redirect("/login");
 }) 
 
 app.get('/login', (req,res) => //Load Login page
 {
-
+  res.render("pages/login");
 })
 
 app.post('/login', (req,res) =>
