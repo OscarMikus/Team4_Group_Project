@@ -62,7 +62,7 @@ app.post('/login', (req,res) =>
 
 app.get('/register', (req,res) => //Register
 {
-
+  res.render('pages/register');
 })
 
 app.post('/register', async (req,res) =>
