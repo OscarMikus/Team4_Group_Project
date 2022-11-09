@@ -6,39 +6,40 @@ CREATE TABLE Users(
     user_city VARCHAR(20)
 );
 
-CREATE TABLE Trails(
-    trail_id SERIAL NOT NULL PRIMARY KEY,
-    trail_name VARCHAR(45),
-    trail_city VARCHAR(20),
+CREATE TABLE Routes(
+    route_id SERIAL NOT NULL PRIMARY KEY,
+    route_name VARCHAR(45),
+    route_city VARCHAR(20),
+    route_rating FLOAT,
     latitude FLOAT,
     longitude FLOAT
 );
 
-CREATE TABLE Trail_Messages(
-    trail_id INT,
+CREATE TABLE Route_Messages(
+    route_id INT,
     user_id INT,
     message VARCHAR(100),
 
     CONSTRAINT fk_trail
-    FOREIGN KEY(trail_id)
-    REFERENCES Trails(trail_id),
+    FOREIGN KEY(route_id)
+    REFERENCES Routes(route_id),
 
     CONSTRAINT fk_user
     FOREIGN KEY(user_id)
     REFERENCES Users(user_id)
 );
 
-CREATE TABLE User_Trails(
+CREATE TABLE User_Routes(
     user_id INT,
-    trail_id INT,
+    route_id INT,
     
     CONSTRAINT fk_user
     FOREIGN KEY(user_id)
     REFERENCES Users(user_id),
 
-    CONSTRAINT fk_trail
-    FOREIGN KEY(trail_id)
-    REFERENCES Trails(trail_id)
+    CONSTRAINT fk_route
+    FOREIGN KEY(route_id)
+    REFERENCES Routes(route_id)
 );
 
 CREATE TABLE Friends(
