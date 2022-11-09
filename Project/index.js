@@ -65,9 +65,20 @@ app.get('/register', (req,res) => //Register
 
 })
 
-app.post('/register', (req,res) =>
+app.post('/register', async (req,res) =>
 {
-    
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const query = 'INSERT INTO Users (username, password) values ($1, $2) returning *;';
+    await db.any(query, [
+        req.body.username,
+        hash
+    ])
+    .then(function (data) {
+        res.redirect('/login');
+    })
+    .catch(function (err) {
+        res.redirect('/register');
+    })
 })
 
 app.post('/addtrail', (req,res) =>
