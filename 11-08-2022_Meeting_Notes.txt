@@ -7,3 +7,10 @@ Flushed out Friends epic and what we think the friends functionality will work.
 Got a better understanding of how Matthews databases work.
 
 Started talking about who 
+
+Because of the # of exams we all had this week we didn't get a bunch done.  This next week we will have much more time to get more done.  
+Plans for next week
+- Get Docker working
+- Have a complete functional register and login process
+- API calls
+- Possibly Deployment, depneds on how far we get.  
