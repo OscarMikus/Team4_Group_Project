@@ -81,9 +81,7 @@ CREATE TABLE Routes(
     route_id SERIAL NOT NULL PRIMARY KEY,
     route_name VARCHAR(45),
     route_city VARCHAR(20),
-    route_rating FLOAT,
-    latitude FLOAT,
-    longitude FLOAT
+    rating FLOAT
 );
 
 CREATE TABLE Route_Messages(

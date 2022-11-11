@@ -65,12 +65,23 @@ app.post('/login', (req,res) =>
 
 app.get('/register', (req,res) => //Register
 {
-
+  res.render('pages/register');
 })
 
-app.post('/register', (req,res) =>
+app.post('/register', async (req,res) =>
 {
-    
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const query = 'INSERT INTO Users (username, password) values ($1, $2) returning *;';
+    await db.any(query, [
+        req.body.username,
+        hash
+    ])
+    .then(function (data) {
+        res.redirect('/login');
+    })
+    .catch(function (err) {
+        res.redirect('/register');
+    })
 })
 
 app.post('/addtrail', (req,res) =>
@@ -96,3 +107,6 @@ app.get('/messages', (req,res) =>
 {
 
 })
+
+app.listen(3000);
+console.log('Server is listening on port 3000');
