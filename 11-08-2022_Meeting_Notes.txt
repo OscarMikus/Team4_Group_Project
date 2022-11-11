@@ -1,0 +1,9 @@
+Meeting notes 11/08/2022
+
+The main goal for the meeting is to set up our epics and user stories/todos.
+
+Changed trails idea to routes to emphisise climbing.  
+Flushed out Friends epic and what we think the friends functionality will work.  
+Got a better understanding of how Matthews databases work.
+
+Started talking about who 
