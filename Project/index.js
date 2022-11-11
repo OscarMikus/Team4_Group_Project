@@ -84,6 +84,11 @@ app.get('/findtrails', (req,res) =>
     
 })
 
+app.get('/myfriends', (req,res) =>
+{
+  app.render('my_friends.ejs');
+})
+
 app.get('/findfriends', (req,res) =>
 {
     
