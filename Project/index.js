@@ -87,9 +87,10 @@ app.post('/login', async (req,res) =>
       }
     })
     .catch((err)=>{
-      res.redirect('/register')
-      console.log("Started /login post error")      
+      console.log("/login post error")      
       console.log(err);
+      res.redirect('/login') //felt like it was appropriate to redirect to the login page if there was an error.  Oscar 35
+
     });
 })
 

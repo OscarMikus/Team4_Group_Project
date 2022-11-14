@@ -1,7 +1,7 @@
 CREATE TABLE Users(
     user_id SERIAL NOT NULL PRIMARY KEY,
     username VARCHAR(20),
-    password VARCHAR(), /*Oscar changed this to unlimited VARCHAR in branch 35*/
+    password VARCHAR, /*Oscar changed this to unlimited VARCHAR in branch 35 because a hashed passwrd didn't fit*/
     user_bio VARCHAR(200),
     user_city VARCHAR(20)
 );
