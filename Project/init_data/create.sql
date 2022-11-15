@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 CREATE TABLE Users(
     user_id SERIAL NOT NULL PRIMARY KEY,
     username VARCHAR(20),
@@ -137,5 +136,4 @@ CREATE TABLE Messages(
     CONSTRAINT fk_sender
     FOREIGN KEY(user_id_sent_by)
     REFERENCES Users(user_id)
->>>>>>> main
 );
