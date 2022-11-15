@@ -1,11 +1,40 @@
+<%- include ('../partials/header') %>
+
+<header class="p-3" style="background-color: #deb887;">
+  <div class="container">
+      <h1 style="font: Rockwell;">
+          Climbing Buddy
+      </h1>
+  </div>
+ </header>
+
+ 
 <main>
-    <div class="container">
-      <form action="/register" method="POST">
-          <label for="username">Username:</label>
-          <input type="text" id="username" name="username"></input>
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password"></input>
-          <button type="submit">Submit</button>
-      </form>
+  <body>
+    <div class="col mb-3">
+      <div class = "col-xs-6">
+        <h2>Create A New Account</h2>
+      </div>
     </div>
+    <div class="container">
+      <form action="/register" method="post">
+        <div class="form-group row mb-3">
+            <label for="inputUser" class="col-sm-1 col-form-label">Username</label>
+            <div class="col">
+              <input class="form-control" id="inputUser" name="username" placeholder="Username">
+            </div>
+          </div>
+        <div class="form-group row mb-3">
+            <label for="inputPassword" class="col-sm-1 col-form-label">Password</label>
+            <div class="col">
+              <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+            </div>
+          </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+          </div>
+    </form>
+    </div>
+  </body>
 </main>
+
+<%- include ('../partials/footer') %>

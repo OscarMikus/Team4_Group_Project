@@ -3,6 +3,7 @@ const app = express();
 const pgp = require("pg-promise")();
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const bcrypt = require('bcrypt');
 
 // db config
 const dbConfig = {
@@ -45,12 +46,9 @@ app.use(
   })
 );
 
-  app.listen(3000);
-console.log('Server is listening on port 3000');
-
 app.get('/', (req,res) => //Homepage
 {
-  res.render("pages/test");
+  res.render("pages/login");
 }) 
 
 app.get('/login', (req,res) => //Load Login page
@@ -69,18 +67,36 @@ app.get('/register', (req,res) => //Register
 })
 
 app.post('/register', async (req,res) =>
-{
+{   
+  //check if one field is null
+    if (req.body.username == null) {
+      console.log("no username");
+      throw new Error(`username cannot be NULL`);
+    }
+    if (req.body.password == null) {
+      console.log("no password");
+      throw new Error(`password cannot be NULL`);
+    }
+  //check if username already exists
+    //ok wait I'll test this later, but tI think the database handles this for us
+    
+  //check if password meets the requirements
+  if (req.body.password.length < 5) {
+    throw new Error(`password must be longer than 5 characters`);
+  }
     const hash = await bcrypt.hash(req.body.password, 10);
     const query = 'INSERT INTO Users (username, password) values ($1, $2) returning *;';
-    await db.any(query, [
-        req.body.username,
-        hash
-    ])
+    await db.any(query, [req.body.username,hash])
     .then(function (data) {
         res.redirect('/login');
     })
     .catch(function (err) {
-        res.redirect('/register');
+      console.log(err);
+        res.render('pages/register', {
+        
+        error: true,
+        message: err.message,
+        });
     })
 })
 
