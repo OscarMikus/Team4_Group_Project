@@ -152,4 +152,5 @@ app.get('/messages', (req,res) =>
 {
 
 })
-//removed a copy of the listen to port 3000 and console log pair - Oscar branch: 35
+app.listen(3000);
+console.log("Server is listening on port 3000");
