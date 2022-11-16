@@ -9,14 +9,6 @@
   </head>
   <body>
   <div class="container">
-    <% if (locals.message) { %>
-      <div
-        class="alert alert-<%- locals.error ? 'danger' : 'success' %>"
-        role="alert"
-      >
-        <%= message %>
-      </div>
-      <% } %>
     <table id="table" class="table">
       <thead>
         <tr>
@@ -25,7 +17,7 @@
       </tr>
       </thead>
       <tbody>
-        <% courses.forEach(element => { %>
+        <% friends.forEach(element => { %>
             <form action="/courses/delete" method="POST">
               <tr>
                 <td><%=element.username %></td>

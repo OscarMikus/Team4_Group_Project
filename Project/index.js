@@ -97,7 +97,19 @@ app.get('/findtrails', (req,res) =>
 
 app.get('/myfriends', (req,res) =>
 {
-  app.render('my_friends.ejs');
+    var query = `SELECT u.user_id, u.username, u.user_city, u.user_bio FROM Users u
+                 INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1;`;
+    db.any(query, [req.session.user.userid])
+      .then((friends) => {
+        res.render("pages/my_friends", {friends}); 
+      })
+      .catch((err) => {
+        res.render("pages/my_friends", {
+          courses: [],
+          error: true,
+          message: err.message,
+        });
+      });
 })
 
 app.get('/findfriends', (req,res) =>
