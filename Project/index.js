@@ -3,6 +3,8 @@ const app = express();
 const pgp = require("pg-promise")();
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const bcrypt = require('bcrypt');
+const axios = require('axios');
 
 // db config
 const dbConfig = {
@@ -55,9 +57,38 @@ app.get('/login', (req,res) => //Load Login page
   res.render("pages/login");
 })
 
-app.post('/login', (req,res) =>
+app.post('/login', async (req,res) =>
 {
-    
+  const query = `SELECT * FROM Users WHERE username = $1`;
+
+  db.one(query, [
+    req.body.username
+  ]
+  )
+    .then(async (data) =>{
+      var match = await bcrypt.compare(req.body.password, data.password);
+
+      if(match)
+      {
+        req.session.user = {
+          api_key: process.env.API_KEY,
+        };
+        req.session.save();
+        console.log("This will work when /my_courses is real");
+        res.redirect('/my_courses')
+      }
+      else
+      {
+        console.log("Incorrect username or password.");
+        res.render('pages/login')
+      }
+    })
+    .catch((err)=>{
+      console.log("/login post error")      
+      console.log(err);
+      res.redirect('/login') //felt like it was appropriate to redirect to the login page if there was an error.  Oscar 35
+
+    });
 })
 
 app.get('/register', (req,res) => //Register
@@ -74,10 +105,11 @@ app.post('/register', async (req,res) =>
         hash
     ])
     .then(function (data) {
-        res.redirect('/login');
+        res.redirect('/login')
     })
     .catch(function (err) {
-        res.redirect('/register');
+        console.log(err);
+        res.redirect('/register')
     })
 })
 
@@ -104,6 +136,4 @@ app.get('/messages', (req,res) =>
 {
 
 })
-
-app.listen(3000);
-console.log('Server is listening on port 3000');
+//removed a copy of the listen to port 3000 and console log pair - Oscar branch: 35
