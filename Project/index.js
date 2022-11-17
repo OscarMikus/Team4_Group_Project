@@ -3,6 +3,7 @@ const app = express();
 const pgp = require("pg-promise")();
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const bcrypt = require('bcrypt');
 
 // db config
 const dbConfig = {
@@ -99,13 +100,13 @@ app.get('/myfriends', (req,res) =>
 {
     var query = `SELECT u.user_id, u.username, u.user_city, u.user_bio FROM Users u
                  INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1;`;
-    db.any(query, [req.session.user.userid])
+    db.any(query, [req.session.username])
       .then((friends) => {
-        res.render("pages/my_friends", {friends}); 
+        res.render("pages/my_friends", [friends]); 
       })
       .catch((err) => {
         res.render("pages/my_friends", {
-          courses: [],
+          friends: [],
           error: true,
           message: err.message,
         });
