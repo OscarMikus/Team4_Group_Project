@@ -20,7 +20,7 @@ const db = pgp(dbConfig);
 // db test
 db.connect()
   .then((obj) => {
-    // Can check the server version here (pg-promise v10.1.0+):
+    // Can check the server version here (pg-promise v10.1.0+): 
     console.log("Database connection successful");
     obj.done(); // success, release the connection;
   })
@@ -75,7 +75,7 @@ app.post('/login', async (req,res) =>
         };
         req.session.save();
         console.log("This will work when /my_courses is real");
-        res.redirect('/my_courses')
+        res.redirect('/myfriends')
       }
       else
       {
@@ -86,7 +86,7 @@ app.post('/login', async (req,res) =>
     .catch((err)=>{
       console.log("/login post error")      
       console.log(err);
-      res.redirect('/login') //felt like it was appropriate to redirect to the login page if there was an error.  Oscar 35
+      res.redirect('/register') //felt like it was appropriate to redirect to the login page if there was an error.  Oscar 35
 
     });
 })
@@ -96,22 +96,21 @@ app.get('/register', (req,res) => //Register
   res.render('pages/register');
 })
 
-app.post('/register', async (req,res) =>
+//POST '/register'
+app.post('/register', async (req, res) =>
 {
     const hash = await bcrypt.hash(req.body.password, 10);
-    const query = 'INSERT INTO Users (username, password) values ($1, $2) returning *;';
-    await db.any(query, [
-        req.body.username,
-        hash
-    ])
+    const input = `INSERT INTO Users (username, password) VALUES ($1, $2);`;
+    db.any(input,[req.body.username,hash])
     .then(function (data) {
-        res.redirect('/login')
-    })
-    .catch(function (err) {
+        console.log('Successful registration');
+        res.render('pages/login');
+      }).catch(function (err) {
         console.log(err);
-        res.redirect('/register')
-    })
-})
+        res.render('pages/register');
+      });
+
+});
 
 app.post('/addtrail', (req,res) =>
 {
