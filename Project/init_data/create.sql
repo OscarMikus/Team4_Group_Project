@@ -1,7 +1,7 @@
 CREATE TABLE Users(
     user_id SERIAL NOT NULL PRIMARY KEY,
-    username VARCHAR(20) UNIQUE,
-    password VARCHAR,
+    username VARCHAR(20) UNIQUE, --added UNIQUE to stop people signing up w/ same usernames in RegisterPath/zachBranch commit
+    password VARCHAR, 
     user_bio VARCHAR(200),
     user_city VARCHAR(20)
 );
