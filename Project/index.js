@@ -97,21 +97,14 @@ app.get('/register', (req,res) => //Register
 
 app.post('/register', async (req,res) =>
 {   
-  //check if one field is null
-    if (req.body.username == null) {
-      console.log("no username");
-      throw new Error(`username cannot be NULL`);
-    }
-    if (req.body.password == null) {
-      console.log("no password");
-      throw new Error(`password cannot be NULL`);
-    }
   //check if username already exists
-    //ok wait I'll test this later, but tI think the database handles this for us
     
   //check if password meets the requirements
   if (req.body.password.length < 5) {
-    throw new Error(`password must be longer than 5 characters`);
+    res.render('pages/register', {
+      error: true,
+      message: "password must be longer than 5 characters",
+    }) 
   }
     const hash = await bcrypt.hash(req.body.password, 10);
     const query = 'INSERT INTO Users (username, password) values ($1, $2) returning *;';

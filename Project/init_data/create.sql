@@ -1,6 +1,6 @@
 CREATE TABLE Users(
     user_id SERIAL NOT NULL PRIMARY KEY,
-    username VARCHAR(20),
+    username VARCHAR(20) UNIQUE,
     password VARCHAR,
     user_bio VARCHAR(200),
     user_city VARCHAR(20)
