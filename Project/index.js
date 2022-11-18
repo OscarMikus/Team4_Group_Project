@@ -4,7 +4,6 @@ const pgp = require("pg-promise")();
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const bcrypt = require('bcrypt');
-const axios = require('axios');
 
 // db config
 const dbConfig = {
@@ -49,7 +48,7 @@ app.use(
 
 app.get('/', (req,res) => //Homepage
 {
-  res.render("pages/test");
+  res.render("pages/login");
 }) 
 
 app.get('/login', (req,res) => //Load Login page
@@ -97,19 +96,36 @@ app.get('/register', (req,res) => //Register
 })
 
 app.post('/register', async (req,res) =>
-{
+{   
+  //check if username already exists
+    //taken care of by UNIQUE keyword in the CREATE.SQL
+
+  //make sure username/password is input
+    //taken care of in the Register.ejs page, can submit without the two forms filled out
+
+  //check if password is long enough
+  if (req.body.password.length < 5) {
+    res.render('pages/register', {
+      error: true,
+      message: "password must be longer than 5 characters",
+    }) 
+  }
+    //hash the password and store it in the db
     const hash = await bcrypt.hash(req.body.password, 10);
     const query = 'INSERT INTO Users (username, password) values ($1, $2) returning *;';
-    await db.any(query, [
-        req.body.username,
-        hash
-    ])
+    await db.any(query, [req.body.username,hash])
+    //if successful, then redirect to login page
     .then(function (data) {
         res.redirect('/login')
     })
+    //if not successful, reload register page and print the error at the top
     .catch(function (err) {
-        console.log(err);
-        res.redirect('/register')
+      console.log(err);
+        res.render('pages/register', {
+        
+        error: true,
+        message: err.message,
+        });
     })
 })
 
