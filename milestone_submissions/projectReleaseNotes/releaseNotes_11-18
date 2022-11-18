@@ -1,0 +1,4 @@
+- got the login route working
+- got the register route completed with checks, and got the page updated with error messages, also updated UI
+- fixed our index.js and create.sql to work with registering and login updates
+- got myFriends implemented
