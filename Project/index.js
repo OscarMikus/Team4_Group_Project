@@ -74,7 +74,6 @@ app.post('/login', async (req,res) =>
           api_key: process.env.API_KEY,
         };
         req.session.save();
-        console.log("This will work when /my_courses is real");
         res.redirect('/myfriends')
       }
       else
@@ -128,15 +127,15 @@ app.get('/findtrails', (req,res) =>
 
 app.get('/myfriends', (req,res) =>
 {
-    var query = `SELECT u.user_id, u.username, u.user_city, u.user_bio FROM Users u
-                 INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1;`;
+    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users
+                 ;`; // INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1
     db.any(query, [req.session.username])
-      .then((friends) => {
-        res.render("pages/my_friends", [friends]); 
+      .then((users) => {
+        res.render("pages/my_friends", {users}); 
       })
       .catch((err) => {
         res.render("pages/my_friends", {
-          friends: [],
+          users: [],
           error: true,
           message: err.message,
         });

@@ -17,19 +17,19 @@
       </tr>
       </thead>
       <tbody>
-        <% friends.forEach(element => { %>
+        <% users.forEach(element => { %>
               <tr>
-                <form action="SOMETHING TO DISPLAY MODAL" method="????"></form>
+              <form action="/friends/remove" method="POST"></form>
+                <td>
                   <input type="hidden" name="username" value="<%- element.username %>">
-                  <button type="submit" class="btn btn-outline-danger"><%- element.username %></button>
-                </form>
+                  <button type="submit" class="btn btn-outline-danger"><%- element.username %>
+                </td>
                 <td><%=element.user_city %></td>
                 <td>
-                  <form action="/friends/remove" method="POST"></form>
                   <input type="hidden" name="username" value="<%- element.username %>">
                   <button type="submit" class="btn btn-outline-danger">Remove Friend</button>
-                  </form>
                 </td>
+              </form>
               </tr>
             <% }) %>
       </tbody>
