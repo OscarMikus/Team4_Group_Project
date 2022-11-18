@@ -129,6 +129,52 @@ app.post('/register', async (req,res) =>
     })
 })
 
+const user = {
+  username: undefined,
+  user_bio: undefined,
+  user_city: undefined,
+};
+
+//Reliant on const user throughout session. Const values set for user in login
+app.get('/displayUserProfile',(req,res)=>
+{
+  res.render("pages/myProfile",{
+    username: req.session.user.username,
+    user_bio: req.session.user.user_bio,
+    user_city: req.session.user.user_city,
+  });
+});
+
+app.get('/updateProfile',(req,res)=>
+{
+  res.render("/pages/updateProfile"); //This will call other API route
+});
+
+app.post('/updateProfile',(req,res)=>
+{
+  const originalUsername= req.session.user.username;
+  const username=req.body.username;
+  const user_bio=req.body.user_bio;
+  const user_city=req.body.user_city;
+  const query = "UPDATE Users SET username = $2, user_bio=$3, user_city=$4 WHERE username=$1";
+  db.any(query,[username])
+    .then((Users)=>{
+        req.session.user.username=username;
+        req.session.user.user_bio=user_bio;
+        req.session.user.user_city=user_city;
+        res.redirect("/displayUserProfile");
+    })
+    .catch((err)=>{
+        console.log(err);
+        res.redirect("/login");
+    });
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/login");
+});
+
 app.post('/addtrail', (req,res) =>
 {
     

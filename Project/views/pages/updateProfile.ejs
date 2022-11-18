@@ -1,0 +1,14 @@
+<!-- Create form to update user DB -->
+<!-- Options for username, user_bio, user_city -->
+<!-- Call /updateProfile API to update user DB -->
+
+<main>
+    <div class="container">
+        <form action="/updateProfile" method="post">
+            <h1>Username</h1><input type="text" id="username" name="username" placeholder="<%=username%>">
+            <h1>User Bio</h1><textarea id="freeform" name="user_bio" rows="4" cols="50"><%=user_bio%></textarea>
+            <h1>User City</h1><input type="text" id="user_city" name="user_city" placeholder="<%=user_city%>">
+            <button type="submit">Update</button>
+        </form>
+    </div>
+</main>
