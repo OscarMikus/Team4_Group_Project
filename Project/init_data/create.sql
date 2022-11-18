@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS Users;
 CREATE TABLE Users(
     user_id SERIAL NOT NULL PRIMARY KEY,
     username VARCHAR(20) UNIQUE, --added UNIQUE to stop people signing up w/ same usernames in RegisterPath/zachBranch commit
@@ -6,6 +7,7 @@ CREATE TABLE Users(
     user_city VARCHAR(20)
 );
 
+DROP TABLE IF EXISTS Routes;
 CREATE TABLE Routes(
     route_id SERIAL NOT NULL PRIMARY KEY,
     route_name VARCHAR(45),
@@ -13,6 +15,7 @@ CREATE TABLE Routes(
     rating FLOAT
 );
 
+DROP TABLE IF EXISTS Route_Messages;
 CREATE TABLE Route_Messages(
     route_id INT,
     user_id INT,
@@ -27,6 +30,7 @@ CREATE TABLE Route_Messages(
     REFERENCES Users(user_id)
 );
 
+DROP TABLE IF EXISTS User_Routes;
 CREATE TABLE User_Routes(
     user_id INT,
     route_id INT,
@@ -40,6 +44,7 @@ CREATE TABLE User_Routes(
     REFERENCES Routes(route_id)
 );
 
+DROP TABLE IF EXISTS Friends;
 CREATE TABLE Friends(
     friendship_id SERIAL NOT NULL PRIMARY KEY,
     user_id_1 INT,
@@ -54,6 +59,7 @@ CREATE TABLE Friends(
     REFERENCES Users(user_id)
 );
 
+DROP TABLE IF EXISTS Messages;
 CREATE TABLE Messages(
     friendship_id INT,
     user_id_sent_by INT,
