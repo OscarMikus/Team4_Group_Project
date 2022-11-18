@@ -1,0 +1,4 @@
+- fixed our index.js so that docker works
+- got a working registration page working, but not final page
+- got a login page mage
+- created a db to store info for entire website(users, routes, friends, etc.)
