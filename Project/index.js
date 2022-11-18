@@ -46,6 +46,12 @@ app.use(
   })
 );
 
+const user = {
+  username: undefined,
+  user_bio: undefined,
+  user_city: undefined,
+};
+
 app.get('/', (req,res) => //Homepage
 {
   res.render("pages/login");
@@ -74,7 +80,7 @@ app.post('/login', async (req,res) =>
         };
         req.session.save();
         console.log("This will work when /my_courses is real");
-        res.redirect('/my_courses')
+        res.redirect('/displayUserProfile')
       }
       else
       {
@@ -128,12 +134,6 @@ app.post('/register', async (req,res) =>
         });
     })
 })
-
-const user = {
-  username: undefined,
-  user_bio: undefined,
-  user_city: undefined,
-};
 
 //Reliant on const user throughout session. Const values set for user in login
 app.get('/displayUserProfile',(req,res)=>
