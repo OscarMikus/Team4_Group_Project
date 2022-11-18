@@ -81,7 +81,7 @@ app.post('/login', async (req,res) =>
         res.render('pages/login', {
         
           error: true,
-          message: "Incorrect Username or password", //just added this message send to the login.ejs page so the error is displayed loginErrorBranch
+          message: "Incorrect Username or Password", //just added this message send to the login.ejs page so the error is displayed loginErrorBranch
           });
       }
     })
