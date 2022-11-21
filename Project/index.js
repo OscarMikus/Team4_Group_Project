@@ -75,6 +75,10 @@ app.post('/login', async (req,res) =>
 
       if(match)
       {
+        
+        user.username = data.username;
+        user.user_bio = data.user_bio;
+        user.user_city = data.user_city;
         req.session.user = {
           api_key: process.env.API_KEY,
         };
