@@ -122,9 +122,12 @@ app.post('/register', async (req,res) =>
     const hash = await bcrypt.hash(req.body.password, 10);
     const query = 'INSERT INTO Users (username, password) values ($1, $2) returning *;';
     await db.any(query, [req.body.username,hash])
-    //if successful, then redirect to login page
+    //if successful, then redirect to updateProfile page
     .then(function (data) {
-        res.redirect('/login')
+      //const username assigned if successful
+      user.username=req.body.username;
+        res.redirect('/updateProfile');
+        
     })
     //if not successful, reload register page and print the error at the top
     .catch(function (err) {
@@ -149,21 +152,22 @@ app.get('/displayUserProfile',(req,res)=>
 
 app.get('/updateProfile',(req,res)=>
 {
-  res.render("/pages/updateProfile"); //This will call other API route
+  res.render("pages/updateProfile"); //This will open ejs page
 });
 
-app.post('/updateProfile',(req,res)=>
+app.post('/updateProfile', async (req,res)=>
 {
   const originalUsername= req.session.user.username;
   const username=req.body.username;
   const user_bio=req.body.user_bio;
   const user_city=req.body.user_city;
   const query = "UPDATE Users SET username = $2, user_bio=$3, user_city=$4 WHERE username=$1";
-  db.any(query,[username])
+  await db.any(query,[username])
     .then((Users)=>{
-        req.session.user.username=username;
-        req.session.user.user_bio=user_bio;
-        req.session.user.user_city=user_city;
+      //assign const user updated valuesS
+        user.username=username;
+        user.user_bio=user_bio;
+        user.user_city=user_city;
         res.redirect("/displayUserProfile");
     })
     .catch((err)=>{
