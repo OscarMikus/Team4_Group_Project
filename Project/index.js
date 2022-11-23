@@ -157,20 +157,20 @@ app.get('/updateProfile',(req,res)=>
 
 app.post('/updateProfile', async (req,res)=>
 {
-  const originalUsername= req.session.user.username;
-  const username=req.body.username;
-  const user_bio=req.body.user_bio;
-  const user_city=req.body.user_city;
-  const query = "UPDATE Users SET username = $2, user_bio=$3, user_city=$4 WHERE username=$1";
+  const username= req.session.user.username;
+  // const user_bio=req.body.user_bio;
+  // const user_city=req.body.user_city;
+  //fix here Where username = ?
+  const query = `UPDATE Users SET user_bio=$1, user_city=$2 WHERE username=bbbbbb`;
   await db.any(query,[username])
-    .then((Users)=>{
+    .then(function (data) {
       //assign const user updated valuesS
-        user.username=username;
-        user.user_bio=user_bio;
-        user.user_city=user_city;
+        // user.username=username;
+        // user.user_bio=user_bio;
+        // user.user_city=user_city;
         res.redirect("/displayUserProfile");
-    })
-    .catch((err)=>{
+        })
+    .catch(function (err) {
         console.log(err);
         res.redirect("/login");
     });
