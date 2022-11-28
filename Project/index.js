@@ -125,7 +125,9 @@ app.post('/register', async (req,res) =>
     //if successful, then redirect to updateProfile page
     .then(function (data) {
       //const username assigned if successful
-      user.username=req.body.username;
+      user.username = req.body.username;
+      req.session.user = user;
+      req.session.save();
         res.redirect('/updateProfile');
         
     })
@@ -152,7 +154,9 @@ app.get('/displayUserProfile',(req,res)=>
 
 app.get('/updateProfile',(req,res)=>
 {
-  res.render("pages/updateProfile"); //This will open ejs page
+  res.render("pages/updateProfile",{
+    username: req.session.user.username,
+  }); //This will open ejs page
 });
 
 app.post('/updateProfile', async (req,res)=>
@@ -164,6 +168,9 @@ app.post('/updateProfile', async (req,res)=>
   const query = `UPDATE Users SET user_bio=$2, user_city=$3 WHERE username=$1`;
   await db.any(query,[username, user_bio, user_city])
     .then(function (data) {
+      user.user_city="";
+      user.user_bio="";
+      req.session.save();
         res.redirect("/displayUserProfile");
         })
     .catch(function (err) {
