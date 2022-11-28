@@ -19,7 +19,7 @@ const db = pgp(dbConfig);
 // db test
 db.connect()
   .then((obj) => {
-    // Can check the server version here (pg-promise v10.1.0+):
+    // Can check the server version here (pg-promise v10.1.0+): 
     console.log("Database connection successful");
     obj.done(); // success, release the connection;
   })
@@ -93,7 +93,7 @@ app.post('/login', async (req,res) =>
     .catch((err)=>{
       console.log("/login post error")      
       console.log(err);
-      res.redirect('/login') //felt like it was appropriate to redirect to the login page if there was an error.  Oscar 35
+      res.redirect('/register') //felt like it was appropriate to redirect to the login page if there was an error.  Oscar 35
 
     });
 })
@@ -201,6 +201,23 @@ app.post('/addfriend', (req,res) =>
 app.get('/findtrails', (req,res) =>
 {
     
+})
+
+app.get('/myfriends', (req,res) =>
+{
+    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users
+                 ;`; // INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1
+    db.any(query, [req.session.username])
+      .then((users) => {
+        res.render("pages/my_friends", {users}); 
+      })
+      .catch((err) => {
+        res.render("pages/my_friends", {
+          users: [],
+          error: true,
+          message: err.message,
+        });
+      });
 })
 
 app.get('/findfriends', (req,res) =>
