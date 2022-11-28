@@ -1,5 +1,5 @@
 <header>
-  <nav class="navbar navbar-expand-sm border-bottom">
+  <nav class="navbar navbar-expand-sm border-bottom" style="background-color: #deb887;">
     <div class="container">
       <button
         class="navbar-toggler ms-auto"
@@ -11,25 +11,26 @@
         aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+      <a class = "navbar-brand" href="#">Climbing Buddy</a>
       <div class="collapse navbar-collapse" id="navbar-collapse">
-        <ul class="navbar-nav me-auto">
+        <ul class="navbar-nav mr-auto" mt-2 mt-lg-0>
           <li class="nav-item">
             <!-- TO-DO: For Discover, add a <a> tag with an attribute href to call the '/discover' API -->
-              <a href = "CHANGETHIS">Option1</a>
+              <a class="nav-link" href = "/myfriends">My Friends</a>
           </li>
           <li class="nav-item">
               <!-- TO-DO: For Discover, add a <a> tag with an attribute href to call the '/discover' API -->
-                <a href = "CHANGETHIS">Option2</a>
+                <a class="nav-link" href = "/findfriends">Find Friends</a>
           </li>
           <li class="nav-item">
               <!-- TO-DO: For Discover, add a <a> tag with an attribute href to call the '/discover' API -->
-                <a href = "CHANGETHIS">Option3</a>
+                <a class="nav-link" href = "CHANGETHIS">Find Routes</a>
           </li>
             
         </ul>
-        <div class="nav-item me-1">
+        <div class="nav-item my-2 my-lg-0">
           <!-- TO-DO: For Logout, add a <a> tag with an attribute href to call the '/logout API -->
-              <a href = "/logout">Logout</a>
+              <a class = "nav-link"href = "/logout">Logout</a>
         </div>
       </div>
     </div>
