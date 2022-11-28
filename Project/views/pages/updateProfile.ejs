@@ -12,8 +12,8 @@
     <div class="container">
         <form action="/updateProfile" method="post">
             <h1><%=username%></h1>
-            <h1>User Bio</h1><textarea id="user_bio" name="user_bio" rows="4" cols="50">Insert Text</textarea>
-            <h1>User City</h1><input type="text" id="user_city" name="user_city" >
+            <h1>User Bio</h1><textarea id="user_bio" name="user_bio" rows="4" cols="50"><%=user_bio%></textarea>
+            <h1>User City</h1><input type="text" id="user_city" value="<%=user_city%>" name="user_city" >
             <button type="submit">Update</button>
         </form>
     </div>

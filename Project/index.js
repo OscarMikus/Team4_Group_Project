@@ -126,6 +126,8 @@ app.post('/register', async (req,res) =>
     .then(function (data) {
       //const username assigned if successful
       user.username = req.body.username;
+      user.user_bio = "";
+      user.user_city = "";
       req.session.user = user;
       req.session.save();
         res.redirect('/updateProfile');
@@ -156,6 +158,8 @@ app.get('/updateProfile',(req,res)=>
 {
   res.render("pages/updateProfile",{
     username: req.session.user.username,
+    user_bio: req.session.user.user_bio,
+    user_city: req.session.user.user_city,
   }); //This will open ejs page
 });
 
