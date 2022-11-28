@@ -84,10 +84,6 @@ app.post('/login', async (req,res) =>
         user.user_city = data.user_city;
 
         req.session.user = user;
-
-        req.session.user = {
-          api_key: process.env.API_KEY,
-        };
         req.session.save();
         console.log("This will work when /my_courses is real");
         res.redirect('/displayUserProfile')
