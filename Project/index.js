@@ -184,10 +184,6 @@ app.post('/updateProfile', async (req,res)=>
     });
 });
 
-app.get("/logout", (req, res) => {
-  req.session.destroy();
-  res.redirect("/login");
-});
 
 app.post('/addtrail', (req,res) =>
 {
@@ -229,5 +225,13 @@ app.get('/messages', (req,res) =>
 {
 
 })
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.render('pages/login', {
+    message: "Logged out successfully.",
+  }) 
+});
+
 app.listen(3000);
 console.log("Server is listening on port 3000");
