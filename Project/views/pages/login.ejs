@@ -8,6 +8,13 @@
       </h1>
   </div>
  </header>
+ 
+<style>
+  div.alert{
+    background-color: lightblue;
+    border: 1px solid #000000;
+  }
+</style>
 
 <main>
   <div class="container">
@@ -25,6 +32,12 @@
       <% } %>
     </head>
     <body>
+      <% if (locals.message) { %>
+        <p><br></p>
+        <div class="alert">
+          <%= message %>
+        </div>
+      <% } %>
         <div>
           <div class="m-3 p-5 row">
             <div class="col">
