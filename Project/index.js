@@ -184,10 +184,6 @@ app.post('/updateProfile', async (req,res)=>
     });
 });
 
-app.get("/logout", (req, res) => {
-  req.session.destroy();
-  res.redirect("/login");
-});
 
 app.post('/addtrail', (req,res) =>
 {
