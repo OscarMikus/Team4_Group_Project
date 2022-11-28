@@ -250,7 +250,20 @@ app.get('/myfriends', (req,res) =>
 
 app.get('/findfriends', (req,res) =>
 {
-    
+  //to delete entirely, copy paste of my friends for meeting 11/28
+    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users
+                 ;`; // INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1
+    db.any(query, [req.session.username])
+      .then((users) => {
+        res.render("pages/findFriends", {users}); 
+      })
+      .catch((err) => {
+        res.render("pages/findFriends", {
+          users: [],
+          error: true,
+          message: err.message,
+        });
+      });
 })
 
 app.get('/messages', (req,res) =>
