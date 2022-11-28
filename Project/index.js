@@ -209,8 +209,7 @@ app.get('/findtrails', (req,res) =>
 
 app.get('/myfriends', (req,res) =>
 {
-    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users
-                 ;`; // INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1
+    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users;`; // INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1
     db.any(query, [req.session.username])
       .then((users) => {
         res.render("pages/my_friends", {users}); 
@@ -222,6 +221,10 @@ app.get('/myfriends', (req,res) =>
           message: err.message,
         });
       });
+})
+
+app.get('/friendProfile',(req,res)=>{
+
 })
 
 app.get('/findfriends', (req,res) =>
