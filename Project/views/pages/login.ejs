@@ -22,14 +22,6 @@
     <head>
       <!--This is where the error is displahyed if there is one on the login.ejs page-->
       <%# Include a spot for the error to appear if there is a problem with registration%>
-      <% if (locals.message) { %>
-      <div
-        class="alert alert-<%- locals.error ? 'danger' : 'success' %>"
-        role="alert"
-      >
-        <%= message %>
-      </div>
-      <% } %>
     </head>
     <body>
       <% if (locals.message) { %>
