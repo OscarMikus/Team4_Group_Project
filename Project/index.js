@@ -46,6 +46,12 @@ app.use(
   })
 );
 
+const user = {
+  username: undefined,
+  user_bio: undefined,
+  user_city: undefined,
+};
+
 app.get('/', (req,res) => //Homepage
 {
   res.render("pages/login");
@@ -69,11 +75,14 @@ app.post('/login', async (req,res) =>
 
       if(match)
       {
-        req.session.user = {
-          api_key: process.env.API_KEY,
-        };
+        
+        user.username = data.username;
+        user.user_bio = data.user_bio;
+        user.user_city = data.user_city;
+        req.session.user = user;
         req.session.save();
-        res.redirect('/myfriends')
+        console.log("This will work when /my_courses is real");
+        res.redirect('/displayUserProfile')
       }
       else
       {
@@ -113,9 +122,16 @@ app.post('/register', async (req,res) =>
     const hash = await bcrypt.hash(req.body.password, 10);
     const query = 'INSERT INTO Users (username, password) values ($1, $2) returning *;';
     await db.any(query, [req.body.username,hash])
-    //if successful, then redirect to login page
+    //if successful, then redirect to updateProfile page
     .then(function (data) {
-        res.redirect('/login')
+      //const username assigned if successful
+      user.username = req.body.username;
+      user.user_bio = "";
+      user.user_city = "";
+      req.session.user = user;
+      req.session.save();
+        res.redirect('/updateProfile');
+        
     })
     //if not successful, reload register page and print the error at the top
     .catch(function (err) {
@@ -127,6 +143,51 @@ app.post('/register', async (req,res) =>
         });
     })
 })
+
+//Reliant on const user throughout session. Const values set for user in login
+app.get('/displayUserProfile',(req,res)=>
+{
+  res.render("pages/myProfile",{
+    username: req.session.user.username,
+    user_bio: req.session.user.user_bio,
+    user_city: req.session.user.user_city,
+  });
+});
+
+app.get('/updateProfile',(req,res)=>
+{
+  res.render("pages/updateProfile",{
+    username: req.session.user.username,
+    user_bio: req.session.user.user_bio,
+    user_city: req.session.user.user_city,
+  }); //This will open ejs page
+});
+
+app.post('/updateProfile', async (req,res)=>
+{
+  const username= req.session.user.username;
+  const user_bio=req.body.user_bio;
+  const user_city=req.body.user_city;
+  //fix here Where username = ?
+  const query = `UPDATE Users SET user_bio=$2, user_city=$3 WHERE username=$1`;
+  await db.any(query,[username, user_bio, user_city])
+    .then(function (data) {
+      user.user_city=req.body.user_city;
+      user.user_bio=req.body.user_bio;
+      req.session.user = user;
+      req.session.save();
+      res.redirect("/displayUserProfile");
+        })
+    .catch(function (err) {
+        console.log(err);
+        res.redirect("/login");
+    });
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/login");
+});
 
 app.post('/addtrail', (req,res) =>
 {
