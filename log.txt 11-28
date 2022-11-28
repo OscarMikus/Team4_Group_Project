@@ -8,6 +8,7 @@ myProfile.ejs:
 updateProfile.ejs:
 -updateProfile uses a POST route to update user information in the user database.
 -Text boxes display current user information, can be edited.
+-Username cannot be edited.
 -Button to submit, redirect back to myProfile.ejs with updated information.
 
 Logout Button:
