@@ -161,9 +161,13 @@ app.post('/updateProfile', async (req,res)=>
   const user_bio=req.body.user_bio;
   const user_city=req.body.user_city;
   //fix here Where username = ?
-  const query = `UPDATE Users SET user_bio=$2, user_city=$3 WHERE username=$1`;
+  const query = `UPDATE Users SET user_bio=$1, user_city=$2 WHERE username=bbbbbb`;
   await db.any(query,[username])
     .then(function (data) {
+      //assign const user updated valuesS
+        // user.username=username;
+        // user.user_bio=user_bio;
+        // user.user_city=user_city;
         res.redirect("/displayUserProfile");
         })
     .catch(function (err) {
