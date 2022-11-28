@@ -168,5 +168,13 @@ app.get('/messages', (req,res) =>
 {
 
 })
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.render('pages/login', {
+    message: "Logged out successfully.",
+  }) 
+});
+
 app.listen(3000);
 console.log("Server is listening on port 3000");
