@@ -87,13 +87,21 @@ app.post('/login', async (req,res) =>
       else
       {
         console.log("Incorrect username or password.");
-        res.render('pages/login')
+        res.render('pages/login', {
+        
+          error: true,
+          message: "Incorrect Username or Password", //just added this message send to the login.ejs page so the error is displayed loginErrorBranch
+          });
       }
     })
     .catch((err)=>{
       console.log("/login post error")      
       console.log(err);
-      res.redirect('/register') //felt like it was appropriate to redirect to the login page if there was an error.  Oscar 35
+      res.render('pages/login', {//felt like it was appropriate to redirect to the login page if there was an error.  Oscar 35
+        
+        error: true,
+        message: "User not found", //just added this message send to the login.ejs page so the error is displayed loginErrorBranch
+        });
 
     });
 })
