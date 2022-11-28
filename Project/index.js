@@ -47,10 +47,12 @@ app.use(
 );
 
 const user = {
+  user_id: undefined,
   username: undefined,
+  password: undefined,
   user_bio: undefined,
   user_city: undefined,
-};
+}
 
 app.get('/', (req,res) => //Homepage
 {
@@ -75,10 +77,12 @@ app.post('/login', async (req,res) =>
 
       if(match)
       {
-        
+        user.user_id = data.user_id;
         user.username = data.username;
+        user.password = data.password;
         user.user_bio = data.user_bio;
         user.user_city = data.user_city;
+
         req.session.user = user;
         req.session.save();
         console.log("This will work when /my_courses is real");
@@ -202,9 +206,29 @@ app.post('/addfriend', (req,res) =>
     
 })
 
-app.get('/findtrails', (req,res) =>
-{
-    
+app.get('/findTrails', (req,res) =>
+{ /*SELECT route_name, route_city, rating FROM ((User_Routes RIGHT JOIN Users ON User_routes.user_id = Users.user_id) LEFT JOIN Routes ON User_routes.route_id = Routes.route_id);*/
+    var query = `SELECT * FROM routes;`;
+
+    db.any(query, [req.session.user.user_id])
+      .then((routes) => {
+        res.render("pages/findTrails", {routes});
+      })
+      .catch((err) => {
+        res.render("pages/findTrails", {
+          routes: [],
+          error: true,
+          message: err.message,
+        });
+      });
+      //adding something to re commit
+})
+
+app.post('/findTrials/add', (req, res) => {
+
+  var query = ` ;`;
+
+  db.any(query, [req.session.user.user_id, ])
 })
 
 app.get('/myfriends', (req,res) =>
@@ -226,7 +250,20 @@ app.get('/myfriends', (req,res) =>
 
 app.get('/findfriends', (req,res) =>
 {
-    
+  //to delete entirely, copy paste of my friends for meeting 11/28
+    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users
+                 ;`; // INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1
+    db.any(query, [req.session.username])
+      .then((users) => {
+        res.render("pages/findFriends", {users}); 
+      })
+      .catch((err) => {
+        res.render("pages/findFriends", {
+          users: [],
+          error: true,
+          message: err.message,
+        });
+      });
 })
 
 app.get('/messages', (req,res) =>
