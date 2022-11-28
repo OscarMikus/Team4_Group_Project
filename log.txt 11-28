@@ -14,3 +14,8 @@ updateProfile.ejs:
 Logout Button:
 -Session is destroyed, user is returned to login page
 -Modal informs user logout was successful
+
+findTrails.ejs
+-Displays all trails
+-Added "add trail" buttons
+-Began API call to add user-trail relations
