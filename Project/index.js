@@ -168,10 +168,10 @@ app.post('/updateProfile', async (req,res)=>
   const query = `UPDATE Users SET user_bio=$2, user_city=$3 WHERE username=$1`;
   await db.any(query,[username, user_bio, user_city])
     .then(function (data) {
-      user.user_city="";
-      user.user_bio="";
+      user.user_city=user_city;
+      user.user_bio=user_bio;
       req.session.save();
-        res.redirect("/displayUserProfile");
+      res.redirect("/displayUserProfile");
         })
     .catch(function (err) {
         console.log(err);
