@@ -233,12 +233,15 @@ app.post('/findTrials/add', (req, res) => {
 
 app.get('/myfriends', (req,res) =>
 {
-    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio 
+    var query = `SELECT DISTINCT users.user_id, users.username, users.user_city, users.user_bio 
                  FROM users
-                 INNER JOIN friends 
-                 ON friends.user_id_1 = $1
-                 WHERE users.user_id = friends.user_id_2
-                 ;`
+                 INNER JOIN friends friend1
+                  ON friend1.user_id_1 = $1
+                  INNER JOIN friends friend2
+                  ON friend2.user_id_2 = $1
+                  WHERE users.user_id = friend1.user_id_2 
+                  OR 
+                  users.user_id = friend2.user_id_1;`
     db.any(query, [req.session.user.user_id])
       .then((userfriends) => {
         console.log("The user id for this session is " + req.session.user.user_id);
