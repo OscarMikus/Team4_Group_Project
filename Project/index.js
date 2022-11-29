@@ -250,7 +250,19 @@ app.get('/myfriends', (req,res) =>
 
 app.get('/findfriends', (req,res) =>
 {
-    
+    var query = `SELECT user_id, username, user_city FROM Users WHERE user_id != $1;`; // AND 
+
+    db.any(query, [req.session.user_id])
+    .then((users) => {
+      res.render('pages/findFriends', {users});
+    })
+    .catch((err) => {
+      res.render('pages/findFriends', {
+        users: [],
+        error: true,
+        message: err.message
+      });
+    });
 })
 
 app.get('/messages', (req,res) =>
