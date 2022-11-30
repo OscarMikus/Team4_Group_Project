@@ -1,0 +1,27 @@
+<!-- Create table to display user data -->
+<!-- Display username, bio, location -->
+<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
+</div>
+</header>
+<main>
+    <div class="container">
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Bio</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+            <% user.forEach(element => { %>
+            <tr>
+                <td><%=element.username%></td>
+                <td><%=element.user_bio%></td>
+                <td><%=element.user_city%></td>
+            </tr>
+            <% })%>
+        </table>
+    </div>
+</main>
+
+<%- include ('../partials/footer') %>

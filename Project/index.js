@@ -166,6 +166,17 @@ app.get('/displayUserProfile',(req,res)=>
   });
 });
 
+app.get('/displayUserProfile/:username',(req,res)=>
+{
+  const query = `SELECT username, user_bio, user_city FROM Users WHERE username = $1;`;
+  const username = req.params.username;
+
+  db.any(query, [username])
+  .then(function(user) {
+    res.render('pages/userProfile',{user});
+  });
+});
+
 app.get('/updateProfile',(req,res)=>
 {
   res.render("pages/updateProfile",{

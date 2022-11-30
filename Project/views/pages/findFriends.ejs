@@ -20,7 +20,7 @@
         </thead>
         <tbody>
           <% users.forEach(element => { %>
-          <form id="form" action="/displayUserProfile" method="GET">
+          <form id="form" action="<%=`/displayUserProfile/${element.username}` %>" method="GET">
             <tr>
               <td><%- element.username %></td>
               <td><%- element.user_city %></td>
