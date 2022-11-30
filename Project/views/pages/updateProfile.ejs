@@ -1,0 +1,22 @@
+<!-- Create form to update user DB -->
+<!-- Options for username, user_bio, user_city -->
+<!-- Call /updateProfile API to update user DB -->
+<%- include ('../partials/header') %> 
+<header class="p-3" style="background-color: #deb887;"><div class="container">
+    <h1 style="font: Rockwell;">
+        Climbing Buddy
+    </h1>
+</div>
+</header>
+<main>
+    <div class="container">
+        <form action="/updateProfile" method="post">
+            <h1><%=username%></h1>
+            <h1>User Bio</h1><textarea id="user_bio" name="user_bio" rows="4" cols="50"><%=user_bio%></textarea>
+            <h1>User City</h1><input type="text" id="user_city" value="<%=user_city%>" name="user_city" >
+            <button type="submit">Update</button>
+        </form>
+    </div>
+</main>
+
+<%- include ('../partials/footer') %>

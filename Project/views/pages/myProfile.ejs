@@ -1,0 +1,26 @@
+<!-- Create table to display user data -->
+<!-- Display username, bio, location -->
+<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
+</div>
+</header>
+<main>
+    <div class="container">
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Bio</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+            <tr>
+                <td><%=username%></td>
+                <td><%=user_bio%></td>
+                <td><%=user_city%></td>
+            </tr>
+        </table>
+        <a class="nav-link" href="/updateProfile">Click Me: Update Profile</a>
+    </div>
+</main>
+
+<%- include ('../partials/footer') %>

@@ -46,6 +46,14 @@ app.use(
   })
 );
 
+const user = {
+  user_id: undefined,
+  username: undefined,
+  password: undefined,
+  user_bio: undefined,
+  user_city: undefined,
+}
+
 app.get('/', (req,res) => //Homepage
 {
   res.render("pages/login");
@@ -69,22 +77,35 @@ app.post('/login', async (req,res) =>
 
       if(match)
       {
-        req.session.user = {
-          api_key: process.env.API_KEY,
-        };
+        user.user_id = data.user_id;
+        user.username = data.username;
+        user.password = data.password;
+        user.user_bio = data.user_bio;
+        user.user_city = data.user_city;
+
+        req.session.user = user;
         req.session.save();
-        res.redirect('/myfriends')
+        console.log("This will work when /my_courses is real");
+        res.redirect('/displayUserProfile')
       }
       else
       {
         console.log("Incorrect username or password.");
-        res.render('pages/login')
+        res.render('pages/login', {
+        
+          error: true,
+          message: "Incorrect Username or Password", //just added this message send to the login.ejs page so the error is displayed loginErrorBranch
+          });
       }
     })
     .catch((err)=>{
       console.log("/login post error")      
       console.log(err);
-      res.redirect('/register') //felt like it was appropriate to redirect to the login page if there was an error.  Oscar 35
+      res.render('pages/login', {//felt like it was appropriate to redirect to the login page if there was an error.  Oscar 35
+        
+        error: true,
+        message: "User not found", //just added this message send to the login.ejs page so the error is displayed loginErrorBranch
+        });
 
     });
 })
@@ -113,9 +134,16 @@ app.post('/register', async (req,res) =>
     const hash = await bcrypt.hash(req.body.password, 10);
     const query = 'INSERT INTO Users (username, password) values ($1, $2) returning *;';
     await db.any(query, [req.body.username,hash])
-    //if successful, then redirect to login page
+    //if successful, then redirect to updateProfile page
     .then(function (data) {
-        res.redirect('/login')
+      //const username assigned if successful
+      user.username = req.body.username;
+      user.user_bio = "";
+      user.user_city = "";
+      req.session.user = user;
+      req.session.save();
+        res.redirect('/updateProfile');
+        
     })
     //if not successful, reload register page and print the error at the top
     .catch(function (err) {
@@ -212,6 +240,13 @@ app.get('/findTrails', (req,res) =>
       //adding something to re commit
 })
 
+app.post('/findTrials/add', (req, res) => {
+
+  var query = ` ;`;
+
+  db.any(query, [req.session.user.user_id, ])
+})
+
 app.get('/myfriends', (req,res) =>
 {
     var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users
@@ -231,12 +266,33 @@ app.get('/myfriends', (req,res) =>
 
 app.get('/findfriends', (req,res) =>
 {
-    
+  //to delete entirely, copy paste of my friends for meeting 11/28
+    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users
+                 ;`; // INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1
+    db.any(query, [req.session.username])
+      .then((users) => {
+        res.render("pages/findFriends", {users}); 
+      })
+      .catch((err) => {
+        res.render("pages/findFriends", {
+          users: [],
+          error: true,
+          message: err.message,
+        });
+      });
 })
 
 app.get('/messages', (req,res) =>
 {
 
 })
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.render('pages/login', {
+    message: "Logged out successfully.",
+  }) 
+});
+
 app.listen(3000);
 console.log("Server is listening on port 3000");
