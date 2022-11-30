@@ -17,21 +17,21 @@
       </tr>
       </thead>
       <tbody>
-        <% users.forEach(element => { %>
+        <% for (var i = 0; i < data.length; i++){ %>
               <tr>
               <form action="/friends/remove" method="POST"></form>
                 <td>
-                  <input type="hidden" name="username" value="<%- element.username %>">
-                  <button type="submit" class="btn btn-outline-danger"><%- element.username %>
+                  <input type="hidden" name="username" value="<%- data[i].username %>">
+                  <button type="submit" class="btn btn-outline-danger"><%- data[i].username %>
                 </td>
-                <td><%=element.user_city %></td>
+                <td><%=data[i].user_city %></td>
                 <td>
-                  <input type="hidden" name="username" value="<%- element.username %>">
+                  <input type="hidden" name="username" value="<%- data[i].username %>">
                   <button type="submit" class="btn btn-outline-danger">Remove Friend</button>
                 </td>
               </form>
               </tr>
-            <% }) %>
+            <% } %>
       </tbody>
     </table>
   </div>

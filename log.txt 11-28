@@ -19,3 +19,13 @@ findTrails.ejs
 -Displays all trails
 -Added "add trail" buttons
 -Began API call to add user-trail relations
+
+myfriends.ejs AND myfriends API GET call
+-Displays all users (this will be modified to only display friends)
+-Template modal (needs JS code still)
+
+findFriends.ejs
+-Displays all users ((this will be modified to only display non-friends)
+-Create API call to display all users in DB
+-Button to add users
+
