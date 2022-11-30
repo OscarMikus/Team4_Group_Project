@@ -250,10 +250,11 @@ app.get('/myfriends', (req,res) =>
 
 app.get('/findfriends', (req,res) =>
 {
-    var query = `SELECT user_id, username, user_city FROM Users WHERE user_id != $1;`; // AND 
+    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users WHERE users.user_id != $1;`; // AND 
 
-    db.any(query, [req.session.user_id])
+    db.any(query, [req.session.user.user_id])
     .then((users) => {
+      console.log(req.session.username);
       res.render('pages/findFriends', {users});
     })
     .catch((err) => {
