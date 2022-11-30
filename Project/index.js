@@ -254,7 +254,6 @@ app.get('/findfriends', (req,res) =>
 
     db.any(query, [req.session.user.user_id])
     .then((users) => {
-      console.log(req.session.username);
       res.render('pages/findFriends', {users});
     })
     .catch((err) => {
