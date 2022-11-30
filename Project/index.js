@@ -166,6 +166,17 @@ app.get('/displayUserProfile',(req,res)=>
   });
 });
 
+app.get('/displayUserProfile/:username',(req,res)=>
+{
+  const query = `SELECT username, user_bio, user_city FROM Users WHERE username = $1;`;
+  const username = req.params.username;
+
+  db.any(query, [username])
+  .then(function(user) {
+    res.render('pages/userProfile',{user});
+  });
+});
+
 app.get('/updateProfile',(req,res)=>
 {
   res.render("pages/updateProfile",{
@@ -259,20 +270,19 @@ app.get('/myfriends', (req,res) =>
 
 app.get('/findfriends', (req,res) =>
 {
-  //to delete entirely, copy paste of my friends for meeting 11/28
-    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users
-                 ;`; // INNER JOIN Friends f ON f.user_id_1=u.$1 OR f.user_id_2=u.$1
-    db.any(query, [req.session.username])
-      .then((users) => {
-        res.render("pages/findFriends", {users}); 
-      })
-      .catch((err) => {
-        res.render("pages/findFriends", {
-          users: [],
-          error: true,
-          message: err.message,
-        });
+    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users WHERE users.user_id != $1;`; // AND 
+
+    db.any(query, [req.session.user.user_id])
+    .then((users) => {
+      res.render('pages/findFriends', {users});
+    })
+    .catch((err) => {
+      res.render('pages/findFriends', {
+        users: [],
+        error: true,
+        message: err.message
       });
+    });
 })
 
 app.get('/messages', (req,res) =>
