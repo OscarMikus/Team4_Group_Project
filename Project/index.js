@@ -128,18 +128,88 @@ app.post('/register', async (req,res) =>
     })
 })
 
-app.post('/addtrail', (req,res) =>
+//Reliant on const user throughout session. Const values set for user in login
+app.get('/displayUserProfile',(req,res)=>
 {
-    
-})
+  res.render("pages/myProfile",{
+    username: req.session.user.username,
+    user_bio: req.session.user.user_bio,
+    user_city: req.session.user.user_city,
+  });
+});
+
+app.get('/updateProfile',(req,res)=>
+{
+  res.render("pages/updateProfile",{
+    username: req.session.user.username,
+    user_bio: req.session.user.user_bio,
+    user_city: req.session.user.user_city,
+  }); //This will open ejs page
+});
+
+app.post('/updateProfile', async (req,res)=>
+{
+  const username= req.session.user.username;
+  const user_bio=req.body.user_bio;
+  const user_city=req.body.user_city;
+  //fix here Where username = ?
+  const query = `UPDATE Users SET user_bio=$2, user_city=$3 WHERE username=$1`;
+  await db.any(query,[username, user_bio, user_city])
+    .then(function (data) {
+      user.user_city=req.body.user_city;
+      user.user_bio=req.body.user_bio;
+      req.session.user = user;
+      req.session.save();
+      res.redirect("/displayUserProfile");
+        })
+    .catch(function (err) {
+        console.log(err);
+        res.redirect("/login");
+    });
+});
+
+
+app.post('/addtrail', async (req,res) =>
+{
+    const user_id = req.session.user.user_id;
+
+    const query = "INSERT INTO User_Routes(user_id, route_id) VALUES ($1, $2);"
+
+    db.any(query, [user_id, route_id])
+    .then((data) => {
+      res.status(201).json({
+        status: 'success',
+        data: data,
+        message: 'data added successfully',
+      });
+    })
+    .catch(function (err) {
+      return console.log(err);
+    });
+
+});
+
 app.post('/addfriend', (req,res) =>
 {
     
 })
 
-app.get('/findtrails', (req,res) =>
-{
-    
+app.get('/findTrails', (req,res) =>
+{ /*SELECT route_name, route_city, rating FROM ((User_Routes RIGHT JOIN Users ON User_routes.user_id = Users.user_id) LEFT JOIN Routes ON User_routes.route_id = Routes.route_id);*/
+    var query = `SELECT * FROM routes;`;
+
+    db.any(query, [req.session.user.user_id])
+      .then((routes) => {
+        res.render("pages/findTrails", {routes});
+      })
+      .catch((err) => {
+        res.render("pages/findTrails", {
+          routes: [],
+          error: true,
+          message: err.message,
+        });
+      });
+      //adding something to re commit
 })
 
 app.get('/myfriends', (req,res) =>
