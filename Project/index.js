@@ -46,6 +46,9 @@ app.use(
   })
 );
 
+//make a global var to check if user is viewing friends in sorted mode
+var friendsSorted = false;
+
 const user = {
   user_id: undefined,
   username: undefined,
@@ -274,7 +277,7 @@ app.get('/myfriends', (req,res) =>
 app.get('/findfriends', (req,res) =>
 {
   //get user info for every user not in the SQL query used in myFriends, and not the current user
-    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio 
+    const query1 = `SELECT users.user_id, users.username, users.user_city, users.user_bio 
                  FROM Users
                  WHERE user_id NOT IN (
                   SELECT DISTINCT users.user_id 
@@ -290,9 +293,34 @@ app.get('/findfriends', (req,res) =>
                   AND user_id != $1;
                  `;
 
-    db.any(query, [req.session.user.user_id])
+    const query2 = `SELECT users.user_id, users.username, users.user_city, users.user_bio 
+                 FROM Users
+                 WHERE user_id NOT IN (
+                  SELECT DISTINCT users.user_id 
+                  FROM users
+                  FULL OUTER JOIN friends friend1
+                  ON friend1.user_id_1 = $1
+                  FULL OUTER JOIN friends friend2
+                  ON friend2.user_id_2 = $1
+                  WHERE users.user_id = friend1.user_id_2 
+                  OR 
+                  users.user_id = friend2.user_id_1
+                  )
+                  AND user_id != $1
+                  AND user_city = $2;
+                 `;
+
+    var query;
+
+    if (friendsSorted) {
+      query = query2;
+    } else {
+      query = query1;
+    }
+
+    db.any(query, [req.session.user.user_id, req.session.user.user_city])
     .then((users) => {
-      res.render('pages/findFriends', {users});
+      res.render('pages/findFriends', {users, sorted:friendsSorted});
     })
     .catch((err) => {
       res.render('pages/findFriends', {
@@ -301,6 +329,18 @@ app.get('/findfriends', (req,res) =>
         message: err.message
       });
     });
+})
+
+app.get("/toggleFriendsSorted", (req, res) =>{
+  //toggle friendsSorted
+  if (friendsSorted) {
+    friendsSorted = false;
+  } else {
+    friendsSorted = true;
+  }
+
+  //reload findFriends page
+  res.redirect('/findfriends');
 })
 
 app.post("/friends/delete", (req, res) =>

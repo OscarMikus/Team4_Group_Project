@@ -16,6 +16,11 @@
             <!--Based off the 4 things stored in a Route table-->
             <td>Username</td>
             <td>City</td>
+            <% if(!sorted) { %>
+              <td><form method="get" action="/toggleFriendsSorted"><button type="submit" class="btn btn-light btn-sm">show nearby users</button></form></td>
+            <% } else { %>
+              <td><form method="get" action="/toggleFriendsSorted"><button type="submit" class="btn btn-dark btn-sm">show all users</button></form></td>
+            <% } %>
         </tr>
         </thead>
         <tbody>
