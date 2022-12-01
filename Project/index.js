@@ -244,15 +244,16 @@ app.post('/findTrials/add', (req, res) => {
 
 app.get('/myfriends', (req,res) =>
 {
+    //Select user info from users combined with 2 instances of friends table to get both when user is friend 1 and when user is friend 2
     var query = `SELECT DISTINCT users.user_id, users.username, users.user_city, users.user_bio 
                  FROM users
-                 INNER JOIN friends friend1
-                  ON friend1.user_id_1 = $1
-                  INNER JOIN friends friend2
-                  ON friend2.user_id_2 = $1
-                  WHERE users.user_id = friend1.user_id_2 
-                  OR 
-                  users.user_id = friend2.user_id_1;`
+                 FULL OUTER JOIN friends friend1
+                 ON friend1.user_id_1 = $1
+                 FULL OUTER JOIN friends friend2
+                 ON friend2.user_id_2 = $1
+                 WHERE users.user_id = friend1.user_id_2 
+                 OR 
+                 users.user_id = friend2.user_id_1;`
     db.any(query, [req.session.user.user_id])
       .then((userfriends) => {
         console.log("The user id for this session is " + req.session.user.user_id);
@@ -284,6 +285,26 @@ app.get('/findfriends', (req,res) =>
       });
     });
 })
+
+app.post("/friends/delete", (req, res) =>
+{
+  //make sure getting the right data(removeFriends)
+  console.log("delete friends is executing");
+  console.log(req.session.user.user_id);
+  console.log(req.body.userID);
+
+  //delete friendship entry where both numbers are present, but order doesn't matter
+  const query = 'DELETE FROM friends WHERE (user_id_1 = $1 AND user_id_2 = $2) OR (user_id_2 = $1 AND user_id_1 = $2)';
+  db.any(query, [req.session.user.user_id, req.body.userID])
+    .then(function(data) {
+      //if it works, just reload the page
+      res.redirect("/myfriends");
+    })
+    .catch(function(err) {
+      //if it doesn't work say what went wrong
+      return console.log(err);
+    })
+});
 
 app.get('/messages', (req,res) =>
 {
