@@ -273,7 +273,22 @@ app.get('/myfriends', (req,res) =>
 
 app.get('/findfriends', (req,res) =>
 {
-    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users WHERE users.user_id != $1;`; // AND 
+  //get user info for every user not in the SQL query used in myFriends, and not the current user
+    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio 
+                 FROM Users
+                 WHERE user_id NOT IN (
+                  SELECT DISTINCT users.user_id 
+                  FROM users
+                  FULL OUTER JOIN friends friend1
+                  ON friend1.user_id_1 = $1
+                  FULL OUTER JOIN friends friend2
+                  ON friend2.user_id_2 = $1
+                  WHERE users.user_id = friend1.user_id_2 
+                  OR 
+                  users.user_id = friend2.user_id_1
+                  )
+                  AND user_id != $1;
+                 `;
 
     db.any(query, [req.session.user.user_id])
     .then((users) => {
@@ -307,6 +322,26 @@ app.post("/friends/delete", (req, res) =>
       return console.log(err);
     })
 });
+
+app.post("/friends/add", (req,res) => {
+  //check that right data is getting input
+  console.log("add friends called");
+  console.log(req.session.user.user_id);
+  console.log(req.body.userID);
+
+  //add friendship entry where user_id_1 is the current user, and user_id_2 is the selected user
+  const query = 'INSERT INTO friends (user_id_1, user_id_2) VALUES ($1, $2);'
+
+  db.any(query, [req.session.user.user_id, req.body.userID])
+  .then(function(data) {
+    //if it works, just reload the page
+    res.redirect("/findFriends");
+  })
+  .catch(function(err) {
+    //if it doesn't work say what went wrong
+    return console.log(err);
+  })
+})
 
 app.get('/messages', (req,res) =>
 {
