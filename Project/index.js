@@ -256,11 +256,13 @@ app.get('/myfriends', (req,res) =>
                  users.user_id = friend2.user_id_1;`
     db.any(query, [req.session.user.user_id])
       .then((userfriends) => {
+        //if succesful, render my_friends with the results of the query
         console.log("The user id for this session is " + req.session.user.user_id);
         console.log(userfriends);
         res.render("pages/my_friends", {data: userfriends}); 
       })
       .catch((err) => {
+        //if unsuccessful, still render my friends, but print an error
         res.render("pages/my_friends", {
           users: [],
           error: true,
