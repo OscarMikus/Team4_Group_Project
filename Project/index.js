@@ -272,7 +272,7 @@ app.get('/myTrails', (req,res) => {
    //only get trails that aling with req.session.user.iser_id in User_Routes
   var query = `SELECT * 
                FROM routes 
-               WHERE route_id = 
+               WHERE route_id IN 
                (
                 SELECT route_id
                 FROM User_Routes
