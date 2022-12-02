@@ -9,10 +9,6 @@
         <thead>
             <tr>
                 <th>Username</th>
-                <th>
-                    <!-- Add photo link here -->
-                    Profile Pic
-                </th>
                 <th>Bio</th>
                 <th>Location</th>
             </tr>
@@ -20,7 +16,6 @@
             <% user.forEach(element => { %>
             <tr>
                 <td><%=element.username%></td>
-                <td> <img alt="<%=element.photoid%>" width="200" src="<%=element.photoid%>"/></td>
                 <td><%=element.user_bio%></td>
                 <td><%=element.user_city%></td>
             </tr>
