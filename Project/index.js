@@ -237,6 +237,19 @@ app.post('/addtrail', async (req,res) =>
 
 });
 
+app.post('/deletetrail', async (req,res) => {
+  var query = 'DELETE FROM User_Routes WHERE user_id = $1 AND route_id = $2;'
+
+  db.any(query, [req.session.user.user_id, req.body.route_id])
+    .then((data) => {
+      res.redirect('/myTrails');
+    })
+    .catch(function (err) {
+      return console.log(err);
+    });
+
+});
+
 app.post('/addfriend', (req,res) =>
 {
     
@@ -257,9 +270,9 @@ var query = `SELECT *
               SELECT route_id
               FROM User_Routes
               WHERE user_id = $1
-              )`; 
+              );`; 
 
-  if(name != ""){
+  /*if(name != ""){
     query += (` AND route_name = '` + name + `' `);
   }
 
@@ -273,7 +286,7 @@ var query = `SELECT *
     query += (` AND rating = '` + qRating + `' `);
   }
 
-  query += ` ;`;
+  query += ` ;`;*/
 
   console.log("query is : " + query);
 

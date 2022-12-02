@@ -21,12 +21,13 @@
                 </thead>
                 <tbody>
                   <% routes.forEach(element => { %>
-                  <form id="form" action="/" method="POST">
+                  <form id="form" action="/deletetrail" method="POST">
                     <tr>
                       <td><%- element.route_name %></td>
                       <td><%- element.route_city %></td>
                       <td><%- element.rating %></td>
                       <input type="hidden" name="route_id" id="route_id" value="<%- element.route_id %>">
+                      <td><button type="submit">Delete</button></td>
                     </tr>
                   </form>
                   <% })%>
