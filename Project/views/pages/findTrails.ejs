@@ -18,15 +18,17 @@
             <td>City</td>
             <td>Rating</td> <!--Is this difficulty or a user rating?????-->
         </tr>
+
         </thead>
         <tbody>
           <% routes.forEach(element => { %>
-          <form id="form" action="/findTrials/add" method="POST">
+          <form id="form" action="/addtrail" method="POST">
             <tr>
               <td><%- element.route_name %></td>
               <td><%- element.route_city %></td>
               <td><%- element.rating %></td>
               <td><button type="submit">ADD</button></td>
+              <input type="hidden" name="route_id" id="route_id" value="<%- element.route_id %>">
             </tr>
           </form>
           <% })%>

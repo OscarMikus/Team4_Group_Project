@@ -52,6 +52,7 @@ const user = {
   password: undefined,
   user_bio: undefined,
   user_city: undefined,
+  first_log: "true",
 }
 
 app.get('/', (req,res) => //Homepage
@@ -74,8 +75,24 @@ app.post('/login', async (req,res) =>
   )
     .then(async (data) =>{
       var match = await bcrypt.compare(req.body.password, data.password);
+      var fl = user.first_log;
 
-      if(match)
+      if(match && fl == "true")
+      {
+        user.user_id = data.user_id;
+        user.username = data.username;
+        user.password = data.password;
+        user.user_bio = data.user_bio;
+        user.user_city = data.user_city;
+        user.first_log = "false"
+
+        req.session.user = user;
+        req.session.save();
+        console.log("This will work when /my_courses is real");
+        console.log(user.user_id);
+        res.redirect('/updateProfile')
+      }
+      else if (match)
       {
         user.user_id = data.user_id;
         user.username = data.username;
@@ -86,6 +103,7 @@ app.post('/login', async (req,res) =>
         req.session.user = user;
         req.session.save();
         console.log("This will work when /my_courses is real");
+        console.log(user.user_id);
         res.redirect('/displayUserProfile')
       }
       else
@@ -140,9 +158,10 @@ app.post('/register', async (req,res) =>
       user.username = req.body.username;
       user.user_bio = "";
       user.user_city = "";
+      user.first_log = "true";
       req.session.user = user;
       req.session.save();
-        res.redirect('/updateProfile');
+        res.redirect('/login');
         
     })
     //if not successful, reload register page and print the error at the top
@@ -208,10 +227,40 @@ app.post('/updateProfile', async (req,res)=>
 });
 
 
-app.post('/addtrail', (req,res) =>
+app.post('/addtrail', async (req,res) =>
 {
-    
-})
+    const user_id = req.session.user.user_id;
+
+    const query = "INSERT INTO User_Routes(user_id, route_id) VALUES ($1, $2);"
+
+    db.any(query, [req.session.user.user_id, req.body.route_id])
+    .then((data) => {
+      /*res.status(201).json({
+        status: 'success',
+        data: data,
+        message: 'data added successfully',
+      }); */
+      res.redirect('/findTrails');
+    })
+    .catch(function (err) {
+      return console.log(err);
+    });
+
+});
+
+app.post('/deletetrail', async (req,res) => {
+  var query = 'DELETE FROM User_Routes WHERE user_id = $1 AND route_id = $2;'
+
+  db.any(query, [req.session.user.user_id, req.body.route_id])
+    .then((data) => {
+      res.redirect('/myTrails');
+    })
+    .catch(function (err) {
+      return console.log(err);
+    });
+
+});
+
 app.post('/addfriend', (req,res) =>
 {
     
@@ -219,7 +268,38 @@ app.post('/addfriend', (req,res) =>
 
 app.get('/findTrails', (req,res) =>
 { /*SELECT route_name, route_city, rating FROM ((User_Routes RIGHT JOIN Users ON User_routes.user_id = Users.user_id) LEFT JOIN Routes ON User_routes.route_id = Routes.route_id);*/
-    var query = `SELECT * FROM routes;`;
+
+var name = req.body.nameIn;
+var city = req.body.cityIn;
+var qRating = req.body.ratingIn;
+var queryChanged = false;
+
+var query = `SELECT * 
+              FROM routes 
+              WHERE route_id NOT IN 
+              (
+              SELECT route_id
+              FROM User_Routes
+              WHERE user_id = $1
+              );`; 
+
+  /*if(name != ""){
+    query += (` AND route_name = '` + name + `' `);
+  }
+
+  if(city != "")
+  {
+    query += (` AND route_city = '` + city + `' `);
+  }
+
+  if(qRating != "")
+  {
+    query += (` AND rating = '` + qRating + `' `);
+  }
+
+  query += ` ;`;*/
+
+  console.log("query is : " + query);
 
     db.any(query, [req.session.user.user_id])
       .then((routes) => {
@@ -235,11 +315,33 @@ app.get('/findTrails', (req,res) =>
       //adding something to re commit
 })
 
-app.post('/findTrials/add', (req, res) => {
+app.get('/myTrails', (req,res) => {
+   //only get trails that aling with req.session.user.iser_id in User_Routes
+  var query = `SELECT * 
+               FROM routes 
+               WHERE route_id IN 
+               (
+                SELECT route_id
+                FROM User_Routes
+                WHERE user_id = $1
+               )
+               ;`; 
+  //var query = `SELECT * FROM User_Routes ;`;
 
-  var query = ` ;`;
 
-  db.any(query, [req.session.user.user_id, ])
+  db.any(query, [req.session.user.user_id])
+  .then((routes) => {
+    res.render("pages/myTrails", {routes});
+  })
+  .catch((err) => {
+    res.render("pages/myTrails", {
+      routes: [],
+      error: true,
+      message: err.message,
+    });
+  });
+
+
 })
 
 app.get('/myfriends', (req,res) =>
