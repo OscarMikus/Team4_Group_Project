@@ -183,9 +183,11 @@ app.post('/register', async (req,res) =>
 //Reliant on const user throughout session. Const values set for user in login
 app.get('/displayUserProfile',(req,res)=>
 {
+  
   res.render("pages/myProfile",{
+    
     username: req.session.user.username,
-    photoID: req.session.user.username,
+    photoID: req.session.user.photoID,
     user_bio: req.session.user.user_bio,
     user_city: req.session.user.user_city,
   });
