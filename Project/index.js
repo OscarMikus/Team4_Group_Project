@@ -222,7 +222,7 @@ app.post('/addtrail', async (req,res) =>
 
     const query = "INSERT INTO User_Routes(user_id, route_id) VALUES ($1, $2);"
 
-    db.any(query, [req.session.user.user_id, req.body.route_id]) //route id not found 
+    db.any(query, [req.session.user.user_id, req.body.route_id])
     .then((data) => {
       /*res.status(201).json({
         status: 'success',
@@ -244,6 +244,12 @@ app.post('/addfriend', (req,res) =>
 
 app.get('/findTrails', (req,res) =>
 { /*SELECT route_name, route_city, rating FROM ((User_Routes RIGHT JOIN Users ON User_routes.user_id = Users.user_id) LEFT JOIN Routes ON User_routes.route_id = Routes.route_id);*/
+
+var name = req.body.nameIn;
+var city = req.body.cityIn;
+var qRating = req.body.ratingIn;
+var queryChanged = false;
+
 var query = `SELECT * 
               FROM routes 
               WHERE route_id NOT IN 
@@ -251,8 +257,25 @@ var query = `SELECT *
               SELECT route_id
               FROM User_Routes
               WHERE user_id = $1
-              )
-              ;`; 
+              )`; 
+
+  if(name != ""){
+    query += (` AND route_name = '` + name + `' `);
+  }
+
+  if(city != "")
+  {
+    query += (` AND route_city = '` + city + `' `);
+  }
+
+  if(qRating != "")
+  {
+    query += (` AND rating = '` + qRating + `' `);
+  }
+
+  query += ` ;`;
+
+  console.log("query is : " + query);
 
     db.any(query, [req.session.user.user_id])
       .then((routes) => {
