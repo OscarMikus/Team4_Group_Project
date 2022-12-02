@@ -5,7 +5,7 @@ INSERT INTO routes (route_id, route_name, route_city, rating) VALUES
 ('4', 'Fort Collins Gym', 'Fort Collins', '5'),
 ('5', 'Golden Rock Wall', 'Golden', '6');
 
-INSERT INTO users (username, password, photoID, user_bio, user_city) VALUES
+INSERT INTO users (username, password, photoid, user_bio, user_city) VALUES
 ('testuser', '$2b$10$qGERG4UYi5wuhbPO8krTEOsPr3jZZk6gNXSTYx.mZXBdlnaw/fEBK', 'img/black.png','This is a sample bio you can update', 'Boulder'),
 ('climb.bradley', 'bjlfiobtj', 'img/social.png', 'I love to climb mountains, rock climbing, and ice climbing. Ive climbed all over the world, from Yosemite to Elbrus to Annapurna.', 'Cheyenne'),
 ('clm10', 'bvijoreiore','img/yosemite.png', 'I also enjoy hiking, camping, and exploring nature. ', 'Boulder'),
