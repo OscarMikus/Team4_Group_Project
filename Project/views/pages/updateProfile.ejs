@@ -12,6 +12,14 @@
     <div class="container">
         <form action="/updateProfile" method="post">
             <h1><%=username%></h1>
+            <h1>User Profile Input Link</h1>
+            <select class="form-select" aria-label="Default select example" name="photoid" id="photoid">
+                <option value="img/black.png">Artsy Climber</option>
+                <option value="img/everest.png">Extreme Climber</option>
+                <option value="img/social.png">Social Climber</option>
+                <option value="img/thailand.png">Beach Climber</option>
+                <option value="img/yosemite.png">Here for the View Climber</option>
+            </select>
             <h1>User Bio</h1><textarea id="user_bio" name="user_bio" rows="4" cols="50"><%=user_bio%></textarea>
             <h1>User City</h1><input type="text" id="user_city" value="<%=user_city%>" name="user_city" >
             <button type="submit">Update</button>

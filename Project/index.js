@@ -31,6 +31,8 @@ db.connect()
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 
+app.use(express.static('Resources'));
+
 // set session
 app.use(
   session({
@@ -55,6 +57,7 @@ const user = {
   password: undefined,
   user_bio: undefined,
   user_city: undefined,
+  photoid: undefined,
   first_log: "true",
 }
 
@@ -85,6 +88,7 @@ app.post('/login', async (req,res) =>
         user.user_id = data.user_id;
         user.username = data.username;
         user.password = data.password;
+        user.photoid = data.photoid;
         user.user_bio = data.user_bio;
         user.user_city = data.user_city;
         user.first_log = "false"
@@ -100,6 +104,7 @@ app.post('/login', async (req,res) =>
         user.user_id = data.user_id;
         user.username = data.username;
         user.password = data.password;
+        user.photoid = data.photoid;
         user.user_bio = data.user_bio;
         user.user_city = data.user_city;
 
@@ -159,6 +164,8 @@ app.post('/register', async (req,res) =>
     .then(function (data) {
       //const username assigned if successful
       user.username = req.body.username;
+      //TODO: insert standard photo for photoid
+      user.photoid = "";
       user.user_bio = "";
       user.user_city = "";
       user.first_log = "true";
@@ -181,8 +188,11 @@ app.post('/register', async (req,res) =>
 //Reliant on const user throughout session. Const values set for user in login
 app.get('/displayUserProfile',(req,res)=>
 {
+  
   res.render("pages/myProfile",{
+    
     username: req.session.user.username,
+    photoid: req.session.user.photoid,
     user_bio: req.session.user.user_bio,
     user_city: req.session.user.user_city,
   });
@@ -190,7 +200,7 @@ app.get('/displayUserProfile',(req,res)=>
 
 app.get('/displayUserProfile/:username',(req,res)=>
 {
-  const query = `SELECT username, user_bio, user_city FROM Users WHERE username = $1;`;
+  const query = `SELECT username, photoid, user_bio, user_city FROM Users WHERE username = $1;`;
   const username = req.params.username;
 
   db.any(query, [username])
@@ -203,6 +213,7 @@ app.get('/updateProfile',(req,res)=>
 {
   res.render("pages/updateProfile",{
     username: req.session.user.username,
+    photoid: req.session.user.photoid,
     user_bio: req.session.user.user_bio,
     user_city: req.session.user.user_city,
   }); //This will open ejs page
@@ -211,12 +222,14 @@ app.get('/updateProfile',(req,res)=>
 app.post('/updateProfile', async (req,res)=>
 {
   const username= req.session.user.username;
+  const photoid= req.session.user.photoid;
   const user_bio=req.body.user_bio;
   const user_city=req.body.user_city;
   //fix here Where username = ?
-  const query = `UPDATE Users SET user_bio=$2, user_city=$3 WHERE username=$1`;
-  await db.any(query,[username, user_bio, user_city])
+  const query = `UPDATE Users SET photoid=$2, user_bio=$3, user_city=$4 WHERE username=$1`;
+  await db.any(query,[username, photoid, user_bio, user_city])
     .then(function (data) {
+      user.photoid=req.body.photoid;
       user.user_city=req.body.user_city;
       user.user_bio=req.body.user_bio;
       req.session.user = user;
