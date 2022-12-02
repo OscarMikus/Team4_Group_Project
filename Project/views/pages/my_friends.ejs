@@ -19,15 +19,18 @@
       <tbody>
         <% for (var i = 0; i < data.length; i++){ %>
               <tr>
-              <form action="/friends/remove" method="POST"></form>
                 <td>
-                  <input type="hidden" name="username" value="<%- data[i].username %>">
-                  <button type="submit" class="btn btn-outline-danger"><%- data[i].username %>
+                  <form method="GET" action="<%=`/displayUserProfile/${data[i].username}` %>">
+                    <input type="hidden" name="Username" value="<%- data[i].username %>">
+                    <button type="submit" class="btn btn-outline-primary"><%- data[i].username %></button>
+                  </form>
                 </td>
                 <td><%=data[i].user_city %></td>
                 <td>
-                  <input type="hidden" name="username" value="<%- data[i].username %>">
-                  <button type="submit" class="btn btn-outline-danger">Remove Friend</button>
+                  <form method='post' action="/friends/delete">
+                    <input type="hidden" name="userID" id="friend_id" value="<%- data[i].user_id %>">
+                    <button type="submit" class="btn btn-outline-danger">Remove Friend</button>
+                  </form>
                 </td>
               </form>
               </tr>
