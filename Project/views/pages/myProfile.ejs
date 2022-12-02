@@ -11,7 +11,7 @@
                 <th>Username</th>
                 <th>
                     <!-- Add photo link here -->
-                    
+                    Profile Pic
                 </th>
                 <th>Bio</th>
                 <th>Location</th>
@@ -19,14 +19,13 @@
         </thead>
             <tr>
                 <td><%=username%></td>
-                <td></td>
+                <td><!-- change img jpg to <%=photoID%> -->
+                    <img src="../../resources/img/black.jpg" alt="Display Image" width="300">s</td>
                 <td><%=user_bio%></td>
                 <td><%=user_city%></td>
             </tr>
         </table>
         <a class="nav-link" href="/updateProfile">Click Me: Update Profile</a>
-        <!-- change img jpg to <%=photoID%> -->
-        <img src="../../img/black.jpg" width="300">
     </div>
 </main>
 
