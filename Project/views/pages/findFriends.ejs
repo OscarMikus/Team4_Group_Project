@@ -16,17 +16,29 @@
             <!--Based off the 4 things stored in a Route table-->
             <td>Username</td>
             <td>City</td>
+            <% if(!sorted) { %>
+              <td><form method="get" action="/toggleFriendsSorted"><button type="submit" class="btn btn-light btn-sm">show nearby users</button></form></td>
+            <% } else { %>
+              <td><form method="get" action="/toggleFriendsSorted"><button type="submit" class="btn btn-dark btn-sm">show all users</button></form></td>
+            <% } %>
         </tr>
         </thead>
         <tbody>
           <% users.forEach(element => { %>
-          <form id="form" action="<%=`/displayUserProfile/${element.username}` %>" method="GET">
             <tr>
-              <td><%- element.username %></td>
+              <td>
+                <form method="GET" action="<%=`/displayUserProfile/${element.username}` %>">
+                  <input type="hidden" name="Username" value="<%- element.username %>">
+                  <button type="submit" class="btn btn-outline-primary"><%- element.username %></button>
+                </form>
+              </td>
               <td><%- element.user_city %></td>
-              <td><button type="submit">View Profile</button></td>
+              <td>
+                <form method='post' action="/friends/add">
+                  <input type="hidden" name="userID" id="friend_id" value="<%- element.user_id %>">
+                  <button type="submit" class="btn btn-outline-success">Add Friend</button>
+                </form>
             </tr>
-          </form>
           <% })%>
         </tbody>
     </div>

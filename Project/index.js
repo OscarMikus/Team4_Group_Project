@@ -48,6 +48,9 @@ app.use(
   })
 );
 
+//make a global var to check if user is viewing friends in sorted mode
+var friendsSorted = false;
+
 const user = {
   user_id: undefined,
   username: undefined,
@@ -359,22 +362,25 @@ app.get('/myTrails', (req,res) => {
 
 app.get('/myfriends', (req,res) =>
 {
+    //Select user info from users combined with 2 instances of friends table to get both when user is friend 1 and when user is friend 2
     var query = `SELECT DISTINCT users.user_id, users.username, users.user_city, users.user_bio 
                  FROM users
-                 INNER JOIN friends friend1
-                  ON friend1.user_id_1 = $1
-                  INNER JOIN friends friend2
-                  ON friend2.user_id_2 = $1
-                  WHERE users.user_id = friend1.user_id_2 
-                  OR 
-                  users.user_id = friend2.user_id_1;`
+                 FULL OUTER JOIN friends friend1
+                 ON friend1.user_id_1 = $1
+                 FULL OUTER JOIN friends friend2
+                 ON friend2.user_id_2 = $1
+                 WHERE users.user_id = friend1.user_id_2 
+                 OR 
+                 users.user_id = friend2.user_id_1;`
     db.any(query, [req.session.user.user_id])
       .then((userfriends) => {
+        //if succesful, render my_friends with the results of the query
         console.log("The user id for this session is " + req.session.user.user_id);
         console.log(userfriends);
         res.render("pages/my_friends", {data: userfriends}); 
       })
       .catch((err) => {
+        //if unsuccessful, still render my friends, but print an error
         res.render("pages/my_friends", {
           users: [],
           error: true,
@@ -385,11 +391,51 @@ app.get('/myfriends', (req,res) =>
 
 app.get('/findfriends', (req,res) =>
 {
-    var query = `SELECT users.user_id, users.username, users.user_city, users.user_bio FROM Users WHERE users.user_id != $1;`; // AND 
+  //get user info for every user not in the SQL query used in myFriends, and not the current user
+    const query1 = `SELECT users.user_id, users.username, users.user_city, users.user_bio 
+                 FROM Users
+                 WHERE user_id NOT IN (
+                  SELECT DISTINCT users.user_id 
+                  FROM users
+                  FULL OUTER JOIN friends friend1
+                  ON friend1.user_id_1 = $1
+                  FULL OUTER JOIN friends friend2
+                  ON friend2.user_id_2 = $1
+                  WHERE users.user_id = friend1.user_id_2 
+                  OR 
+                  users.user_id = friend2.user_id_1
+                  )
+                  AND user_id != $1;
+                 `;
 
-    db.any(query, [req.session.user.user_id])
+    const query2 = `SELECT users.user_id, users.username, users.user_city, users.user_bio 
+                 FROM Users
+                 WHERE user_id NOT IN (
+                  SELECT DISTINCT users.user_id 
+                  FROM users
+                  FULL OUTER JOIN friends friend1
+                  ON friend1.user_id_1 = $1
+                  FULL OUTER JOIN friends friend2
+                  ON friend2.user_id_2 = $1
+                  WHERE users.user_id = friend1.user_id_2 
+                  OR 
+                  users.user_id = friend2.user_id_1
+                  )
+                  AND user_id != $1
+                  AND user_city = $2;
+                 `;
+
+    var query;
+
+    if (friendsSorted) {
+      query = query2;
+    } else {
+      query = query1;
+    }
+
+    db.any(query, [req.session.user.user_id, req.session.user.user_city])
     .then((users) => {
-      res.render('pages/findFriends', {users});
+      res.render('pages/findFriends', {users, sorted:friendsSorted});
     })
     .catch((err) => {
       res.render('pages/findFriends', {
@@ -398,6 +444,58 @@ app.get('/findfriends', (req,res) =>
         message: err.message
       });
     });
+})
+
+app.get("/toggleFriendsSorted", (req, res) =>{
+  //toggle friendsSorted
+  if (friendsSorted) {
+    friendsSorted = false;
+  } else {
+    friendsSorted = true;
+  }
+
+  //reload findFriends page
+  res.redirect('/findfriends');
+})
+
+app.post("/friends/delete", (req, res) =>
+{
+  //make sure getting the right data(removeFriends)
+  console.log("delete friends is executing");
+  console.log(req.session.user.user_id);
+  console.log(req.body.userID);
+
+  //delete friendship entry where both numbers are present, but order doesn't matter
+  const query = 'DELETE FROM friends WHERE (user_id_1 = $1 AND user_id_2 = $2) OR (user_id_2 = $1 AND user_id_1 = $2)';
+  db.any(query, [req.session.user.user_id, req.body.userID])
+    .then(function(data) {
+      //if it works, just reload the page
+      res.redirect("/myfriends");
+    })
+    .catch(function(err) {
+      //if it doesn't work say what went wrong
+      return console.log(err);
+    })
+});
+
+app.post("/friends/add", (req,res) => {
+  //check that right data is getting input
+  console.log("add friends called");
+  console.log(req.session.user.user_id);
+  console.log(req.body.userID);
+
+  //add friendship entry where user_id_1 is the current user, and user_id_2 is the selected user
+  const query = 'INSERT INTO friends (user_id_1, user_id_2) VALUES ($1, $2);'
+
+  db.any(query, [req.session.user.user_id, req.body.userID])
+  .then(function(data) {
+    //if it works, just reload the page
+    res.redirect("/findFriends");
+  })
+  .catch(function(err) {
+    //if it doesn't work say what went wrong
+    return console.log(err);
+  })
 })
 
 app.get('/messages', (req,res) =>
