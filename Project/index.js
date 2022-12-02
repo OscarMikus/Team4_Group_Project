@@ -31,6 +31,8 @@ db.connect()
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 
+app.use(express.static('Resources'));
+
 // set session
 app.use(
   session({
